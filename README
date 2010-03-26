@@ -1,0 +1,14 @@
+glutclass project
+By Edward Kandrot
+
+Testing out github.  Wrote a small test class that can be used as a framework for experimenting with OpenGL.
+
+One inherits the class Glut from glut.h, then overrides any of the setup or event routines.  The event routines are registered callbacks from glut.
+
+There are a few test cases as part of this package:
+test0 - shows the basics of using glut.h
+test1 - expands on test0, uses the pixmap class, overrides mouse to allow drawing into a bitmap
+
+
+Where will it go
+I have plans to add more callbacks to the base class.  Fill out other OpenGL classes, which I guess means I shouldn't have caled this project glutclass...  Still, this is mostly testing the waters of github.
