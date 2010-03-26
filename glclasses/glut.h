@@ -23,17 +23,20 @@ class Glut {
                              | (isSingle_?GLUT_SINGLE:GLUT_DOUBLE) );
     }
 
-
-    // ***************************************
-    // dummy functions, to be overridden by real program functions
-    // ***************************************
-
     // the following routine affect the windowing and possibly internal structures
     virtual void set_width_height( int w, int h ) {
         width_ = w;
         height_ = h;
         glutReshapeWindow( width_, height_ );
     }
+
+    // ***************************************
+    // dummy functions, to be overridden by real program functions
+    //
+    // for anything ending in _event, do not call the base class when overriding
+    // these are just simple samples so that you know the derived class is working
+    // before you go off exploring OpenGL
+    // ***************************************
 
     // the following are called from glut's registered callbacks
     virtual void render_event( void ) {
@@ -59,17 +62,17 @@ class Glut {
     virtual void key_special_event( int key, int x, int y ) {
         if (key == GLUT_KEY_F1) {
             if (isGameMode_) {
-                windowID_ = glutCreateWindow( windowName_ );
                 glutLeaveGameMode();
+                glutSetWindow( windowID_ );
+                glutShowWindow();
                 isGameMode_ = false;
             } else {
                 char    gamestring[256];
                 sprintf( gamestring, "%dx%d:32", width_, height_ );
                 glutGameModeString( gamestring );
                 if (glutGameModeGet( GLUT_GAME_MODE_POSSIBLE )) {
+                    glutHideWindow();
                     glutEnterGameMode();
-                    glutDestroyWindow( windowID_ );
-                    windowID_ = 0;
                     isGameMode_ = true;
                     //glutFullScreen();
                 }
@@ -96,18 +99,14 @@ class Glut {
 
         width_ = width;
         height_ = height;
+        glViewport( 0, 0, width_, height_ );
 
         float ratio = width_ / (float)height_;
 
-        // Reset the coordinate system before modifying
         glMatrixMode( GL_PROJECTION );
         glLoadIdentity();
-
-        // Set the viewport to be the entire window
-        glViewport( 0, 0, width_, height_ );
-
-        // Set the correct perspective.
         gluPerspective( 45, ratio, 1, 1000 );
+
         glMatrixMode( GL_MODELVIEW );
         glLoadIdentity();
         gluLookAt( 0.0,0.0,5.0, 0.0,0.0,-1.0, 0.0f,1.0f,0.0f );
@@ -211,7 +210,7 @@ class Glut {
   private:
     char    windowName_[256];
     int     windowID_;
-    int     width_, height_;    // reading is fine, change using set_XXX()
+    int     width_, height_;
     bool    isSingle_;
     bool    hasDepth_;
     bool    isGameMode_;
