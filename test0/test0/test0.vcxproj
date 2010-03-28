@@ -14,9 +14,9 @@
     <ClCompile Include="..\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\glclasses\glut.h" />
-    <ClInclude Include="..\glclasses\pixmap.h" />
-    <ClInclude Include="..\glclasses\util.h" />
+    <ClInclude Include="..\..\glclasses\glut.h" />
+    <ClInclude Include="..\..\glclasses\pixmap.h" />
+    <ClInclude Include="..\..\glclasses\util.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0282EE1-2085-49F5-B99D-1FA23B828D20}</ProjectGuid>

@@ -10,7 +10,12 @@ class Glut {
     virtual ~Glut() {}
     
     virtual void init( int *argc, char **argv, int width, int height ) {
+        static int  howMany = 0;
+        ++howMany;
+        if (howMany > 1)
+            return;
         *theOne() = this;
+
         width_ = width; height_ = height;
         strcpy( windowName_, argv[0] );
 
@@ -55,6 +60,12 @@ class Glut {
             if (isGameMode_) {
                 glutLeaveGameMode();
             }
+            #if defined(_WIN32)
+            // couldn't figure out how to get MSVC10 to allow throw to work, so we just
+            // bypass their handlers and exit, hope that they implemented good cleanup for us as well...
+            exit(0);
+            #endif
+            
             throw 0;
         }
     }
