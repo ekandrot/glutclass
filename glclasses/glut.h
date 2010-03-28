@@ -7,6 +7,7 @@
 class Glut {
   public:
     Glut( ) : isSingle_(true), hasDepth_(false), isGameMode_(false) {}
+    Glut( bool doubleBuffer, bool hasDepth ) : isSingle_(!doubleBuffer), hasDepth_(hasDepth), isGameMode_(false) {}
     virtual ~Glut() {}
     
     virtual void init( int *argc, char **argv, int width, int height ) {
@@ -37,7 +38,7 @@ class Glut {
     // ***************************************
 
     // the following are called from glut's registered callbacks
-    virtual void render_event( void ) {
+    virtual void display_event( void ) {
         glClear( GL_COLOR_BUFFER_BIT
                  | (hasDepth_?GL_DEPTH_BUFFER_BIT:0) );
         glBegin(GL_TRIANGLES);
@@ -107,7 +108,7 @@ class Glut {
         gluLookAt( 0.0,0.0,5.0, 0.0,0.0,-1.0, 0.0f,1.0f,0.0f );
     }
 
-    void idle_event( void ) {
+    virtual void idle_event( void ) {
     }
 
     // ***************************************
@@ -144,10 +145,9 @@ class Glut {
         return &glut;
     }
 
-    // this function breaks the mold - it calls render, then it displays
     static void display_func( void ) {
         Glut *glut = *theOne();
-        glut->render_event();
+        glut->display_event();
         if (glut->isSingle_)
             glFlush();
         else
@@ -224,7 +224,6 @@ class Glut {
     bool    isSingle_;
     bool    hasDepth_;
     bool    isGameMode_;
-
 };
 
 

@@ -10,7 +10,7 @@ class MyGlut : public Glut {
         pixmap_.init( width, height );
     }
 
-    virtual void render_event( void ) {
+    virtual void display_event( void ) {
         glDrawPixels( pixmap_.width(), pixmap_.height(), GL_RGBA, GL_UNSIGNED_BYTE, pixmap_.pixels() );
     }
 
