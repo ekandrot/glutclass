@@ -23,7 +23,7 @@ class MyGlut : public Glut {
 int main( int argc, char **argv ) {
     MyGlut  glut;
 
-    glut.init( &argc, argv, 1024, 768 );
+    glut.init( &argc, argv, 480, 320 );
 
     // we use try/catch to clean up after glut's endless loop
     // in the glut or derived glut classes, we should throw rather than exit

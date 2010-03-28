@@ -28,13 +28,6 @@ class Glut {
                              | (isSingle_?GLUT_SINGLE:GLUT_DOUBLE) );
     }
 
-    // the following routine affect the windowing and possibly internal structures
-    virtual void set_width_height( int w, int h ) {
-        width_ = w;
-        height_ = h;
-        glutReshapeWindow( width_, height_ );
-    }
-
     // ***************************************
     // dummy functions, to be overridden by real program functions
     //
@@ -103,16 +96,7 @@ class Glut {
     }
 
     virtual void reshape_event( int width, int height ) {
-	// Prevent a divide by zero, when window is too short
-	// (you can't make a window of zero width).
-        if (height == 0)
-            height = 1;
-
-        width_ = width;
-        height_ = height;
-        glViewport( 0, 0, width_, height_ );
-
-        float ratio = width_ / (float)height_;
+        float ratio = width / (float)height;
 
         glMatrixMode( GL_PROJECTION );
         glLoadIdentity();
@@ -202,7 +186,15 @@ class Glut {
 
     static void reshape_func( int width, int height ) {
         Glut *glut = *theOne();
-        glut->reshape_event( width, height );
+    	// Prevent a divide by zero, when window is too short
+	    // (you can't make a window of zero width).
+        if (height == 0)
+            height = 1;
+
+        glut->width_ = width;
+        glut->height_ = height;
+        glViewport( 0, 0, glut->width_, glut->height_ );
+        glut->reshape_event( glut->width_, glut->height_ );
     }
 
     static void idle_func( void ) {
@@ -213,10 +205,17 @@ class Glut {
     // getters
     inline int      width( void )   {return width_;}
     inline int      height( void )  {return height_;}
+    inline bool     hasDepth( void )  {return hasDepth_;}
 
     // setters
     inline void set_width( int width )   {set_width_height( width, height_ );}
     inline void set_height( int height ) {set_width_height( width_, height );}
+    void set_width_height( int w, int h ) {
+        width_ = w;
+        height_ = h;
+        glutReshapeWindow( width_, height_ );
+    }
+
 
   private:
     char    windowName_[256];
