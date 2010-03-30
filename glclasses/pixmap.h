@@ -53,6 +53,7 @@ class Pixmap {
     inline GLubyte *pixels( void )  {return pixels_;}
     inline int      width( void )   {return width_;}
     inline int      height( void )  {return height_;}
+    inline int      stride( void )  {return width_;}
 
     // setters
     inline void set_width( int width )   {resize( width, height_, CLEAR | COPY );}
