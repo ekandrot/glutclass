@@ -1,11 +1,15 @@
 glutclass project
 By Edward Kandrot
 
-Wrote a small test class that can be used as a framework for experimenting with OpenGL.  One inherits the class Glut from glut.h, then overrides any of the setup or _event routines.  The _event routines are callback by the glut registered callbacks.
+This is a small test class that can be used as a framework for experimenting with OpenGL.  One inherits the class Glut from glut.h, then overrides any of the setup or _event routines.  The _event routines are callback by the glut registered callbacks.
+
+The advantages of using this class is that everything is in the headers - no other code need be linked into ones projects.  Just include glut.h from glutclass, create a class that derives from Glut, override any of the virtual methods to handle events, call init then loop and you are done.
 
 There are a few test cases as part of this package:
-test0 - shows the basics of using glut.h
-test1 - expands on test0, uses the pixmap class, overrides mouse to allow drawing into a bitmap
+test0 - shows the basics of using glut.h, the simplest possible use case of Glut
+test1 - expands on test0, uses the pixmap class, overrides mouse to allow drawing into a pixmap, shows how to use the pixmap class
 tes2 - 3d object follows the mouse around, overrides the passive mouse callback.
 
 Tested on Windows and Linx.  The projects for Windows were created in Visual Studio 10.
+
+Will probably create a glutpixmap class that is based on test1, so that if one has some simple pixmaps to display, everything can be set up in two or three lines of code (ie allocate, init, and loop).  This will give one a Window onto which OpenGL is bound into which a pixmap will be displayed on event - all handled without need of code on your part.  Still all done with only headers, so that g++ yourclass.cpp is all that is needed to build your class with Glut.
