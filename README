@@ -9,6 +9,7 @@ There are a few test cases as part of this package:
 test0 - shows the basics of using glut.h, the simplest possible use case of Glut
 test1 - expands on test0, uses the pixmap class, overrides mouse to allow drawing into a pixmap, shows how to use the pixmap class
 tes2 - 3d object follows the mouse around, overrides the passive mouse callback.
+test3 - tests out idle and double buffering.  creates a frame-based simple animation of a 3d arrow and 2d circle, rotating as time passes.
 
 Tested on Windows and Linx.  The projects for Windows were created in Visual Studio 10.
 
