@@ -6,4 +6,4 @@ debug: main.cpp ../glclasses/glut.h ../glclasses/pixmap.h ../glclasses/util.h
 
 .PHONY: clean
 clean:
-	rm testapp debug
+	-rm testapp debug
