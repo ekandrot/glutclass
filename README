@@ -10,6 +10,7 @@ test0 - shows the basics of using glut.h, the simplest possible use case of Glut
 test1 - expands on test0, uses the pixmap class, overrides mouse to allow drawing into a pixmap, shows how to use the pixmap class
 tes2 - 3d object follows the mouse around, overrides the passive mouse callback.
 test3 - tests out idle and double buffering.  creates a frame-based simple animation of a 3d arrow and 2d circle, rotating as time passes.
+test4 - starts with test1 and adds CUDA to the mix.  the pixmap is generated via a CUDA kernel, copied back to host memory, then copied back with glDrawPixels.  ineffecient use of memory transfer, but this test is only to verify the the base classes work with CUDA.  doesn't check the CUDA return values for errors at the moment.
 
 Tested on Windows and Linx.  The projects for Windows were created in Visual Studio 10.
 
