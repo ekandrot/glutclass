@@ -1,3 +1,4 @@
+.PHONY: all clean
 all:
 	cd test0;make
 	cd test1;make
