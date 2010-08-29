@@ -1,4 +1,3 @@
-#include <ctime>
 #include <cmath>
 #include "../glclasses/glut.h"
 
@@ -11,7 +10,6 @@ class MyGlut : public Glut {
 
     virtual void init( int *argc, char **argv, int width, int height ) {
         Glut::init( argc, argv, width, height );
-        nextTime_ = clock() + 1;    // gives us one second before we start getting reposts
         frame_ = 0;
 
         // a red circle that saves and restores current color
@@ -59,34 +57,17 @@ class MyGlut : public Glut {
                 glVertex3f( -0.7, 0.05f*cosf(i*PI/180), 0.05f*sinf(i*PI/180) );
         glEnd();
         glEndList();
+    }
 
-        bufferDirty_ = true;
+    // we have this set to be called every 30th of a second, as passed into loop(1/30)
+    virtual void idle_event( void ) {
+        ++frame_;
+        glutPostRedisplay();
     }
 
     virtual void display_event( void ) {
-        bufferDirty_ = true;
-    }
-
-    virtual void idle_event( void ) {
-        if (clock() >= nextTime_) {
-            // tell the class it is time to do the next frame
-            ++frame_;
-            glutPostRedisplay();
-            update_nextTime( THIRTIETH_OF_SEC );
-        }
-
-        // since we are double buffered, let's fill in the back buffer
-        // during idle time, then display_event will only swap and tell us
-        // that the back buffer is dirty again
-        if (bufferDirty_) {
-            render_frame( frame_ );
-            bufferDirty_ = false;
-        }
-    }
-
-    void render_frame( int frame ) {
-        float   angleDegrees = frame;
-        float   angleRadians = frame * PI/180;
+        float   angleDegrees = frame_;
+        float   angleRadians = frame_ * PI/180;
         glClear( GL_COLOR_BUFFER_BIT
                  | (hasDepth()?GL_DEPTH_BUFFER_BIT:0) );
 
@@ -108,16 +89,8 @@ class MyGlut : public Glut {
         glPopMatrix();
     }
 
-    // this updates the next time we get called for repost.  ideally, it should end up calling
-    // this code 1/seconds times per second because of the +=.  if the code were instead:
-    // nextTime_ = clock() + seconds * CLOCKS_PER_SEC; then it would drift, but it would give
-    // the rest of the code at least seconds to do its work.
-    void update_nextTime( float seconds ) { nextTime_ += seconds * CLOCKS_PER_SEC; }
-
   private:
-    clock_t nextTime_;
     int     frame_;
-    bool    bufferDirty_;
 };
 
 int main( int argc, char **argv ) {
@@ -127,7 +100,7 @@ int main( int argc, char **argv ) {
 
     int     exitCode = 0;
     try {
-        glut.loop();
+        glut.loop( THIRTIETH_OF_SEC );
     }
     catch (int e) {
         exitCode = e;

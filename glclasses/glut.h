@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctime>
 #include <GL/glut.h>
 
 class Glut {
   public:
-    Glut( ) : isSingle_(true), hasDepth_(false), isGameMode_(false) {}
-    Glut( bool doubleBuffer, bool hasDepth ) : isSingle_(!doubleBuffer), hasDepth_(hasDepth), isGameMode_(false) {}
+    Glut( ) : isSingle_(true), hasDepth_(false), isGameMode_(false), timerEnabled_(false) {}
+    Glut( bool doubleBuffer, bool hasDepth ) : isSingle_(!doubleBuffer), hasDepth_(hasDepth), isGameMode_(false), timerEnabled_(false) {}
     virtual ~Glut() {}
     
     virtual void init( int *argc, char **argv, int width, int height ) {
@@ -134,6 +135,30 @@ class Glut {
         glutMainLoop();
     }
 
+    // calling this one instead of the void version will enable a timed callback
+    // rather than having to implement it oneself in idle
+    void loop( float seconds ) {
+        register_callbacks();
+        timerEnabled_ = true;
+        timerSeconds_ = seconds;
+        nextTime_ = clock();    // start now
+        if (hasDepth_)   glEnable( GL_DEPTH_TEST );
+        glutMainLoop();
+    }
+
+    // if there was no timer enabled, then idle is just called as normal
+    // if there was a timer enabled, then we
+    void idle( void ) {
+        if (!timerEnabled_)
+            idle_event();
+        else {
+            if (clock() >= nextTime_) {
+                nextTime_ += timerSeconds_ * CLOCKS_PER_SEC;
+                idle_event();
+            }
+        }
+    }
+
 
     // ***************************************
     // static methods start here
@@ -199,7 +224,7 @@ class Glut {
 
     static void idle_func( void ) {
         Glut *glut = *theOne();
-        glut->idle_event();
+        glut->idle();
     }
 
     // getters
@@ -224,6 +249,8 @@ class Glut {
     bool    isSingle_;
     bool    hasDepth_;
     bool    isGameMode_;
+    bool    timerEnabled_;
+    float   timerSeconds_;
+    clock_t nextTime_;
 };
-
 
